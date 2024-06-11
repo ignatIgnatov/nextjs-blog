@@ -36,7 +36,7 @@ export async function PUT(req) {
             })
         }
 
-        const updateBlogByBlogID = await Blog.findOneAndUpdate(
+        const updateBlogByBlogID = await Blog.findOneAndReplace(
             { _id: getCurrentBlogID },
             { title, description },
             { new: true }
