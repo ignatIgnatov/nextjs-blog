@@ -1,31 +1,38 @@
 'use client';
 
-import { Button } from "../ui/button";
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import AddNewBlog from "../add-new-blog";
-import { Title } from "@radix-ui/react-dialog";
+
+import { Button } from "../ui/button";
+
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardTitle,
+} from "@/components/ui/card"
+import { useRouter } from "next/navigation";
+
 
 const initialBlogFormData = {
     title: '',
     description: '',
 }
 
-const BlogOverview = () => {
+const BlogOverview = ({ blogList }) => {
 
     const [openBlogDialog, setOpenBlogDialog] = useState(false);
     const [loading, setLoading] = useState(false);
     const [blogFormData, setBlogFormData] = useState(initialBlogFormData);
 
-    console.log(blogFormData);
+    const router = useRouter();
+
+    console.log(blogList);
+
+    useEffect(() => {
+        router.refresh();
+    }, [])
 
     async function handleSaveBlogData() {
         try {
@@ -40,8 +47,8 @@ const BlogOverview = () => {
                 setBlogFormData(initialBlogFormData)
                 setOpenBlogDialog(false)
                 setLoading(false)
+                router.refresh();
             }
-            console.log(result);
 
         } catch (error) {
             console.log(error);
@@ -62,11 +69,28 @@ const BlogOverview = () => {
                     setBlogFormData={setBlogFormData}
                     handleSaveBlogData={handleSaveBlogData}
                 />
-            </div>
-            <div>
-                Blog list section
-            </div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-5">
+                    {
+                        blogList && blogList.length > 0
+                            ?
+                            blogList.map((blogItem) =>
+                                <Card className="p-5">
+                                    <CardContent>
+                                        <CardTitle className="mb-5">{blogItem?.title}</CardTitle>
+                                        <CardDescription>{blogItem.description}</CardDescription>
+                                        <div className="mt-5 flex gap-5 items-center">
+                                            <Button>Edit</Button>
+                                            <Button>Delete</Button>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+
+                            )
+                            : null
+                    }
+                </div>
+            </div>
         </div>
     )
 }
