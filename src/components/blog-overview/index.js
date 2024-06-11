@@ -13,6 +13,7 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { useRouter } from "next/navigation";
+import { Label } from "../ui/label";
 
 
 const initialBlogFormData = {
@@ -57,6 +58,21 @@ const BlogOverview = ({ blogList }) => {
         }
     }
 
+    async function handleDeleteBlogByID(getCurrentID) {
+        try {
+            const apiResponse = await fetch(`/api/delete-blog?id=${getCurrentID}`, {
+                method: 'DELETE'
+            });
+            const result = await apiResponse.json();
+
+            if (result?.success) {
+                router.refresh();
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className="min-h-screen flex flex-col gap-6 bg-gradient-to-r from-purple-500 to-blue-600 p-6">
             <div>
@@ -81,13 +97,13 @@ const BlogOverview = ({ blogList }) => {
                                         <CardDescription>{blogItem.description}</CardDescription>
                                         <div className="mt-5 flex gap-5 items-center">
                                             <Button>Edit</Button>
-                                            <Button>Delete</Button>
+                                            <Button onClick={() => handleDeleteBlogByID(blogItem._id)}>Delete</Button>
                                         </div>
                                     </CardContent>
                                 </Card>
 
                             )
-                            : null
+                            : <Label className="text-3xl font-extrabold">No Blog Found! Please add one!</Label>
                     }
                 </div>
             </div>
