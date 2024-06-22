@@ -26,12 +26,17 @@ You would need the following tools installed before running the project locally:
    ```
    npm install
    ```
-5. Start the project:
+5. In .env.local file add the following:
+
+   ```
+   DATABASE_URL={YOUR_MONGODB_DATABASE_URL}
+   ```
+6. Start the project:
 
    ```
    npm run dev
    ```
-6. Access the application:
+7. Access the application:
 
    - Go to http://localhost:3000
    
